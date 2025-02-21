@@ -4,6 +4,7 @@ import com.sky.interceptor.JwtTokenAdminInterceptor;
 import com.sky.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -30,6 +31,9 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport  {
 
     @Autowired
     private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
+
+    @Value("${local.images}")
+    String localImagesPath;
 
     /**
      * 注册自定义拦截器
@@ -70,6 +74,9 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport  {
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:"+localImagesPath);
     }
 
     /**
@@ -86,4 +93,5 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport  {
         //将消息转换器对象添加到消息转换器的集合中
         converters.add(0,converter);
     }
+
 }
